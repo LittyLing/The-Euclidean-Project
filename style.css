@@ -1,0 +1,295 @@
+* {
+ box-sizing: border-box;
+}
+
+body {
+ background-color: #4FC3F7;
+ color: black;
+ margin: 0;
+ padding: 0;
+ clear: both;
+ text-align: left;
+ font-family: sans-serif, arial;
+}
+
+#wrapper {
+ background-color: #4FC3F7;
+ width: 100%;
+ height: 100%;
+ position: relative;
+ margin: 0 auto;
+}
+
+header {
+ background-color: #03A9F4;
+ color: white;
+ box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.26);
+ width: 100%;
+ height: 70px;
+ position: fixed;
+ top: 0;
+ left: 0;
+ margin: 0 auto;
+ padding: 10px 30px;
+ text-align: left;
+ line-height: 50%;
+ vertical-align: middle;
+ z-index: 100;
+ -webkit-user-select: none;
+ -ms-user-select: none;
+ -moz-user-select: none;
+ -o-user-select: none;
+ user-select: none;
+}
+
+header h2 {
+ margin-left: 30px;
+ float: left;
+ display: inline-block;
+ cursor: pointer;
+ font-weight: normal;
+}
+
+header nav {
+ float: left;
+ margin-top: 10px;
+}
+
+a {
+ color: inherit;
+ text-decoration: none;
+ cursor: pointer;
+}
+
+.menuIcon {
+ display: block;
+ margin-top: 5px;
+ text-align: center;
+}
+
+.menuIcon div {
+ background-color: white;
+ width: 30px;
+ height: 3px;
+ margin-top: 5px;
+ display: block;
+ -webkit-transition: 0.5s;
+ -ms-transition: 0.5s;
+ -moz-transition: 0.5s;
+ -o-transition: 0.5s;
+ transition: 0.5s;
+}
+
+.menuIcon:hover .menuIconDiv, .menuIcon.active .menuIconDiv {
+ background-color: #B3E5FC;
+}
+
+#navigationButtons {
+ background-color: #29B6F6;
+ box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.26), inset 0px 5px 5px rgba(0, 0, 0, 0.26);
+ height: 10000px;
+ list-style: none;
+ padding: 10px 30px 10px 10px; 
+ overflow: hidden;
+ position: absolute;
+ left: -80%;
+ z-index: -1;
+ -webkit-transition: left 1s;
+ -ms-transition: left 1s;
+ -moz-transition: left 1s;
+ -o-transition: left 1s;
+ transition: left 1s;
+}
+
+#navigationButtons li a {
+ color: white;
+ opacity: 0.7;
+ margin-left: 10px;
+ display: block;
+ text-align: left;
+ padding: 10% 5%;
+ font-size: 30px;
+ cursor: pointer;
+ -webkit-transition: opacity 1s;
+ -ms-transition: opacity 1s;
+ -moz-transition: opacity 1s;
+ -o-transition: opacity 1s;
+ transition: opacity 1s;
+}
+
+header nav:hover #navigationButtons {
+ /*left: 0%;*/
+}
+
+#navigationButtons li a:hover:not(.active) {
+ opacity: 1;
+}
+
+#navigationButtons li a.active {
+ opacity: 1;
+}
+
+#contentWrapper {
+ width: 90%;
+ margin: 0 auto;
+ text-align: center;
+}
+
+.button {
+ background-color: #4FC3F7;
+ color: #E1F5FE;
+ font-size: 22px;
+ text-align: center;
+ padding: 5px;
+ cursor: pointer;
+ -webkit-transition: background-color 1s, color 1s;
+ -ms-transition: background-color 1s, color 1s;
+ -moz-transition: background-color 1s, color 1s;
+ -o-transition: background-color 1s, color 1s;
+ transition: background-color 1s, color 1s;
+}
+
+.button:hover, .button.active {
+ background-color: #00B0FF;
+}
+
+.pageContentWrapper {
+ width: 100%;
+ height: 100%;
+ padding: 100px 10px 10px 10px;
+}
+
+.main {
+ color: black;
+}
+
+article {
+ text-align: center;
+}
+
+article h1 {
+ font-size: 275%;
+}
+
+article h2 {
+ font-size: 150%;
+}
+
+#canvasContainer {
+ background-color: #4FC3F7;
+ color: #E1F5FE;
+ /*box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.26);*/
+ width: 100%;
+ /*height for sources other than codecademy*/
+ height: 500px;
+ padding: 20px 10px;
+ border-radius: 10px;
+ -webkit-touch-callout: none;
+ -webkit-user-select: none;
+ -ms-user-select: none;
+ -moz-user-select: none;
+ -o-user-select: none;
+ user-select: none;  
+}
+
+#canvasInterface {
+ width: 100%;
+ text-align: center;
+ font-size: 20px;
+ cursor: default;
+}
+
+#canvasContainer .menuIcon {
+ width: 120px;
+ margin-bottom: 10px;
+}
+
+#canvasContainer ul span {
+ background-color: #4FC3F7;
+ margin-bottom: 5px;
+ float: left;
+ display: block;
+ text-align: left;
+ font-size: 24px;
+}
+
+#canvasContainer ul span:hover {
+ background-color: #00B0FF;
+}
+
+#canvasButtonContainerTop {
+ width: 98%;
+ margin: auto;
+}
+
+#canvasButtonContainerSide {
+ background-color: #4FC3F7;
+ height: 0px;
+ margin: 0;
+ padding: 0 10px;
+ display: inline-block;
+ float: left;
+ position: absolute;
+ /*left: -500px;*/
+ text-align: left;
+ overflow-y: scroll;
+ /*-webkit-transition: left 1s;
+ -moz-transition: left 1s;
+ -o-transition: left 1s;
+ transition: left 1s;*/
+ -webkit-transition: height 1s;
+ -ms-transition: height 1s;
+ -moz-transition: height 1s;
+ -o-transition: height 1s;
+ transition: height 1s;
+}
+
+#canvasButtonContainerSide .button {
+ width: 100%;
+ font-size: 20px;
+}
+
+.canvasButton {
+ background-color: #4FC3F7;
+ margin: 0;
+ padding: 0;
+ display: block;
+ list-style: none;
+ text-align: left;
+}
+
+.canvasButtonListContainer {
+ max-height: 1000px;
+ opacity: 1;
+ -webkit-transition: max-height 1s, opacity 1s;
+ -ms-transition: max-height 1s, opacity 1s;
+ -moz-transition: max-height 1s, opacity 1s;
+ -o-transition: max-height 1s, opacity 1s;
+ transition: max-height 1s, opacity 1s;
+}
+
+.canvasButtonListContainer.find, .canvasButtonListContainer.measure {
+ margin-top: 5px;
+}
+    
+.canvasButton li a {
+ background-color: #4FC3F7;
+ display: block;
+ padding-left: 30px;
+ text-align: left;
+}
+
+#canvas {
+ width: 98%;
+ height: 100%;
+}
+
+footer {
+ background-color: #00B0FF;
+ color: white;
+ width: 100%;
+ margin-top: 200px;
+ float: left;
+ clear: both;
+ text-align: center;
+}

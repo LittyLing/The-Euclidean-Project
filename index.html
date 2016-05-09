@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>The Euclidean Project</title>
+    <meta charset = "UTF-8"/>
+    <meta name = "viewport" content = "width = device-width, initial-scale = 1.0, user-scalable = 0"/>
+	<link rel = "stylesheet" href = "style.css"/>
+	<!--script tag for codecademy-->
+	<script src = "//code.jquery.com/jquery-1.10.2.min.js"></script>
+	<!--script tag for other sites-->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+	
+	<!--
+	    To Do List:
+	    1. Comment and Refine Code, Fix Bugs
+	    2. Improve Interface, JS and Web Design
+	    3. Mobile Controls
+	    4. Responsive Program
+	    5. Change Project Name
+	    6. More Webpages and Web Features
+	    7. *Transformations and New Features
+	-->
+</head>
+<body>
+    <div id = "wrapper">
+        <header>
+            <nav>
+                <a class = "menuIcon">
+                    <div class = "menuIconDiv"></div>
+                    <div class = "menuIconDiv"></div>
+                    <div class = "menuIconDiv"></div>
+                </a>
+                
+                <ul id = "navigationButtons">
+                    <li><a href = "#">Home</a></li>
+                    <li><a class = "active" href = "#">Constructor</a></li>
+                    <li><a href = "#">About</a></li>
+                </ul>
+            </nav>
+            
+            <h2>The Euclidean Project</h2>
+        </header>
+        
+        <div id = "contentWrapper">
+            <div class = "pageContentWrapper" id = "canvasContentWrapper">
+                <section class = "main">
+                    <article>
+                        <div id = "canvasContainer">
+                            <div id = "canvasInterface">
+                                INTERFACE:<br>
+                                
+                                <span>Welcome to the Euclidean Project! Get started by clicking the menu button!</span>
+                            </div>
+                            <br>
+                            <nav>
+                                <div id = "canvasButtonContainerTop">
+                                    <a class = "button menuIcon">MENU <span>▼</span></a>
+                                </div>
+                            
+                                <div id = "canvasButtonContainerSide">
+                                    <ul class = "canvasButton show" id = "actions">
+                                        <span class = "actions button">ACTIONS</span><br><br>
+                                        <div class = "canvasButtonListContainer actions">
+                                            <li><a class = "button actions" id = "clear">Clear All</a></li>
+                                            <li><a class = "button actions" id = "delete">Delete</a></li>
+                                            <li><a class = "button actions" id = "hideShow">Hide/Show</a></li>
+                                            <li><a class = "button actions" id = "move">Move/Resize</a></li>
+                                            <li><a class = "button actions" id = "label">Label</a></li>
+                                        </div>
+                                    </ul>
+                                    
+                                    <ul class = "canvasButton show" id = "constructFree">
+                                        <span class = "constructFree button">CONSTRUCT FREE HAND</span><br><br>
+                                        <div class = "canvasButtonListContainer constructFree">
+                                            <li><a class = "button constructFree" id = "pointFree">Point</a></li>
+                                            <li><a class = "button constructFree" id = "lineSegmentFree">Line Segment</a></li>
+                                            <li><a class = "button constructFree" id = "lineFree">Line</a></li>
+                                            <li><a class = "button constructFree" id = "circleFree">Circle</a></li>
+                                            <li><a class = "button constructFree" id = "marker">Marker</a></li>
+                                        </div>
+                                    </ul>
+                                    
+                                    <!--<ul class = "canvasButton show" id = "constructSelect">
+                                        <span class = "constructSelect button">CONSTRUCT BY SELECT</span><br><br>
+                                        <li><a class = "button constructSelect" id = "lineSegmentSelect">Line Segment</a></li>
+                                        <li><a class = "button constructSelect" id = "lineSelect">Line</a></li>
+                                        <li><a class = "button constructSelect" id = "circleSelect">Circle</a></li>
+                                    </ul>-->
+                                    
+                                    <ul class = "canvasButton show" id = "construct">
+                                        <span class = "construct button">CONSTRUCT</span><br><br>
+                                        <div class = "canvasButtonListContainer construct">
+                                            <li><a class = "button construct" id = "compass">Congruent Circles</a></li>
+                                            <li><a class = "button construct" id = "midpoint">Midpoint</a></li>
+                                            <li><a class = "button construct" id = "perpendicular">Perpendicular</a></li>
+                                            <li><a class = "button construct" id = "parallel">Parallel</a></li>
+                                            <li><a class = "button construct" id = "angleBisector">Angle Bisector</a></li>
+                                        </div>
+                                    </ul>
+                                    
+                                    <ul class = "canvasButton show" id = "find">
+                                        <span class = "find button">FIND</span><br><br>
+                                        <div class = "canvasButtonListContainer find">
+                                            <li><a class = "button find" id = "intersection">Intersection Points</a></li>
+                                        </div>
+                                    </ul>
+                                    
+                                    <ul class = "canvasButton show" id = "measure">
+                                        <span class = "measure button">MEASURE</span><br><br>
+                                        <div class = "canvasButtonListContainer measure">
+                                            <li><a class = "button measure" id = "findLength">Length</a></li>
+                                            <li><a class = "button measure" id = "findAngle">Angle</a></li>
+                                        </div>
+                                    </ul>
+                                </div>
+                            </nav>
+                            
+                            <canvas id = "canvas">Your Browser Doesn't Support Canvas...</canvas>
+                            
+                            <script src = "script.js"></script>
+                        </div>
+                    </article>
+                </section>
+            </div>
+        </div>
+        
+        <footer>
+                <div class = "content">
+                    <p>The Euclidean Project <br>&copy Litty Ling Inc. | All Righs Reserved</p>
+                </div>
+        </footer>
+    </div>
+</body>
+</html>
