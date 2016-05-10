@@ -1595,27 +1595,27 @@ function canvasUserDown() {
     } else if (mode === "findLength" && mouse.objectHover !== null && !mouse.objectHover.hidden) {
         // measuring length
         if (mouse.objectHover.class !== "label") {
-            mouse.select.push(mouse.colliding);
+            mouse.select.push(mouse.objectHover);
             $("#canvasInterface span").html(mouse.select.length + " points selected!");
-            if (mouse.select.length >= 1 && mouse.objectHover.class === "lineSegment" && !mouse.objectHover.hidden) {
+            if (mouse.select.length >= 1 && mouse.objectHover.class === "lineSegment") {
                 // creates new label with length of selected line segment
                 labels.push(new Label((mouse.objectHover.point1.x + mouse.objectHover.point2.x)/2, -(mouse.objectHover.point1.y + mouse.objectHover.point2.y)/2, findLengthLineSegment(mouse.objectHover) + " u", "lengthLineSegment", [mouse.objectHover])); 
                 
                 $("#canvasInterface span").html("Length found!");
-            } else if (mouse.select.length >= 2 && mouse.select[0].class === "point" && mouse.select[1].class === "point" && !mouse.select[0].hidden && !mouse.select[1].hidden) {
+                mouse.select = [];
+            } else if (mouse.select.length >= 2 && mouse.select[0].class === "point" && mouse.select[1].class === "point") {
                 // creates new line segments between selected points
                 lineSegments.push(new LineSegment(mouse.select[0].x, mouse.select[0].y, mouse.select[1].x, mouse.select[1].y, "select", [mouse.select[0], mouse.select[1]]));
                 // creates new label with length between selected points
                 labels.push(new Label((mouse.select[0].x + mouse.select[1].x)/2, -(mouse.select[0].y + mouse.select[1].y)/2, findLengthPoints(mouse.select[0], mouse.select[1]) + " u", "lengthPoints", [mouse.select[0], mouse.select[1]]));
                 
                 $("#canvasInterface span").html("Length found!");
+                mouse.select = [];
             } else if (mouse.select.length >= 2) {
                 // selected objects cannot be used
                 $("#canvasInterface span").html("Selected objects do not meet parameters!");
                 mouse.select = [];
             }
-            
-            mouse.select = [];
         } else {
             // selected objects cannot be used
             $("#canvasInterface span").html("Selected objects do not meet parameters!");
