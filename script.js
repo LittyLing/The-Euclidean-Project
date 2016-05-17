@@ -1,10 +1,46 @@
 // webpage scripts
 // main function
 $(document).ready(function() {
-    // sets header navbar top to header bottom
-    $("#navigationButtons").offset({top: $("header").offset().top + $("header").height() + 20});
-    // sets canvas button container left to canvas container left
-    $("#canvasButtonContainerSide").css("left", $("#canvasContainer").offset().left + 15);
+    // different page display mechanics (only for codecademy)
+    $(".pageContentWrapper").css("display", "none");
+    $(".pageCurrent").css("display", "block");
+    
+    // navigation button click
+    $("#navigationButtons li a").click(function() {
+        if ($(".pageContentWrapper." + $(this).attr("class")).css("display") === "none") {
+            $(".pageContentWrapper").css("display", "none");
+            $(".pageContentWrapper." + $(this).attr("class")).css("display", "block");
+            $("#navigationButtons .active").removeClass("active");
+            $(this).addClass("active");
+            
+            // setting up constructor page (only for codecademy)
+            if ($(this).hasClass("constructor")) {
+                setCanvas();
+                resize();
+            }
+        }
+    });
+    
+    // footer link click
+    $("footer .links a:not(.icon)").click(function() {
+        $(".pageContentWrapper").css("display", "none");
+        $(".pageContentWrapper." + $(this).attr("class")).css("display", "block");
+        
+        // setting up constructor page (only for codecademy)
+        if ($(this).hasClass("constructor")) {
+            setCanvas();
+            resize();
+        }
+    });
+    
+    function setCanvas() {
+        // sets header navbar top to header bottom
+        $("#navigationButtons").offset({top: $("header").offset().top + $("header").height() + 20});
+        // sets canvas button container left to canvas container left
+        $("#canvasButtonContainerSide").css("left", $("#canvasContainer").offset().left + 15);
+    };
+    
+    setCanvas();
     
     // header navbar animation
     var animating = false;
@@ -129,8 +165,13 @@ var canvasOriginalWidth = canvas.width;
 
 // canvas mode
 var mode = "move";
-
 var construct = "";
+
+// mobile settings
+var mobile = false;
+if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+    mobile = true;
+}
     
 // webpage responsiveness on resize
 function resize() {
@@ -169,22 +210,41 @@ var mouse = {
     pTwoObjectHoverSelect: [],
     // mouse activity
     draw: false,
+    // mobile states
+    touch: false,
     // mouse cursor type
     cursor: "default"
 };
 
-// mouse position function
-function mousePosition(e) {
-    // setting mouse coordinates 
-    mouse.x = e.x - canvas.getBoundingClientRect().left;
-    mouse.y = e.y - canvas.getBoundingClientRect().top;
-    
-    // mouse coordinates updated based on canvas settings
-    mouse.x = parseInt((mouse.x - canvas.width/2)/(canvas.clientWidth/canvas.width));
-    mouse.y = parseInt((-1 * (mouse.y - canvas.height/2))/(canvas.clientHeight/canvas.height));
+// mouse position for desktop function
+function mousePositionDesktop(e) {
+    if (!mobile) {
+        // setting mouse coordinates 
+        mouse.x = e.x - canvas.getBoundingClientRect().left;
+        mouse.y = e.y - canvas.getBoundingClientRect().top;
+        
+        // mouse coordinates updated based on canvas settings
+        mouse.x = (mouse.x - canvas.width/2)/(canvas.clientWidth/canvas.width);
+        mouse.y = (-1 * (mouse.y - canvas.height/2))/(canvas.clientHeight/canvas.height);
+    }
 };
     
-canvas.addEventListener("mousemove", mousePosition);
+canvas.addEventListener("mousemove", mousePositionDesktop);
+
+// mouse position for mobile function
+function mousePositionMobile(e) {
+        // setting mouse coordinates 
+        var x = e.touches[0].clientX - canvas.getBoundingClientRect().left;
+        var y = e.touches[0].clientY - canvas.getBoundingClientRect().top;
+        
+        // mouse coordinates updated based on canvas settings
+        x = (x - canvas.width/2)/(canvas.clientWidth/canvas.width);
+        y = (-1 * (y - canvas.height/2))/(canvas.clientHeight/canvas.height);
+    return {
+        x: x,
+        y: y
+    };
+};
 
 // point objects array
 var points = [];
@@ -756,7 +816,7 @@ function intersectionLines(line1, line2) {
 };
 
 // intersection of circles calculator
-// credit : http://csharphelper.com/blog/2014/09/determine-where-two-circles-intersect-in-c/
+// credit: http://csharphelper.com/blog/2014/09/determine-where-two-circles-intersect-in-c/
 function intersectionCircles(circle1, circle2) {
     // distance between centers of two circles
     var distance = Math.sqrt(Math.pow(circle1.center.x - circle2.center.x, 2) + Math.pow(circle1.center.y - circle2.center.y, 2));
@@ -2014,11 +2074,64 @@ canvas.addEventListener("mousemove", canvasUserMove);
 canvas.addEventListener("mouseup", canvasUserUp);
 
 // mobile controls
-canvas.addEventListener("touchstart", canvasUserDown);
+// credit: http://bencentra.com/code/2014/12/05/html5-canvas-touch-events.html
+canvas.addEventListener("touchstart", function(e) {
+    if (mobile) {
+        mouse.touch = true;
+        mouse.x = mousePositionMobile(e).x;
+        mouse.y = mousePositionMobile(e).y;
+        var touch = e.touches[0];
+        var mouseEvent = new MouseEvent("mousedown", {
+            clientX: touch.clientX,
+            clientY: touch.clientY
+        });
+        canvas.dispatchEvent(mouseEvent);
+        canvasUserDown();
+    }    
+}, false);
 
-canvas.addEventListener("touchmove", canvasUserMove);
+canvas.addEventListener("touchmove", function(e) {
+    if (mobile) {
+        mouse.x = mousePositionMobile(e).x;
+        mouse.y = mousePositionMobile(e).y;
+		var touch = e.touches[0];
+		var mouseEvent = new MouseEvent("mousemove", {
+			clientX: touch.clientX,
+			clientY: touch.clientY
+		});
+		canvas.dispatchEvent(mouseEvent);
+        canvasUserMove();
+    }        
+});
 
-canvas.addEventListener("touchend", canvasUserUp);
+canvas.addEventListener("touchend", function(e) {
+    if (mobile) {
+        mouse.touch = false;
+        var mouseEvent = new MouseEvent("mouseup", {});
+		canvas.dispatchEvent(mouseEvent);
+        canvasUserUp();
+        mouse.colliding = null;
+        mouse.objectHover = null;
+        mouse.twoObjectHover = [];
+    }        
+});
+
+// mobile scrolling prevention
+document.body.addEventListener("touchstart", function (e) {
+    if (e.target == canvas) {
+    e.preventDefault();
+    }
+}, false);
+document.body.addEventListener("touchend", function (e) {
+    if (e.target == canvas) {
+    e.preventDefault();
+    }
+}, false);
+document.body.addEventListener("touchmove", function (e) {
+    if (e.target == canvas) {
+    e.preventDefault();
+    }
+}, false);
 
 // main logic and rendering function
 function update() {
