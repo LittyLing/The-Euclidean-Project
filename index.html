@@ -32,9 +32,9 @@
                 </a>
                 
                 <ul id = "navigationButtons">
-                    <li><a href = "#">Home</a></li>
-                    <li><a class = "active" href = "#">Constructor</a></li>
-                    <li><a href = "#">About</a></li>
+                    <li><a class = "home" href = "#">Home</a></li>
+                    <li><a class = "constructor active" href = "#">Constructor</a></li>
+                    <li><a class = "about" href = "#">About</a></li>
                 </ul>
             </nav>
             
@@ -42,7 +42,23 @@
         </header>
         
         <div id = "contentWrapper">
-            <div class = "pageContentWrapper" id = "canvasContentWrapper">
+            <div class = "home pageContentWrapper" id = "homeContentWrapper">
+                <section class = "main">
+                    <article>
+                        <span class = "heading">Welcome to the Euclidean Project</span>
+                        
+                        <br>
+                        
+                        <span class = "subheading">Insert Subheading</span>
+                        
+                        <br>
+                        
+                        <a class = "constructor button redirectButton" href = "#">START</a>
+                    </article>
+                </section>
+            </div>
+        
+            <div class = "constructor pageCurrent pageContentWrapper" id = "constructorContentWrapper">
                 <section class = "main">
                     <article>
                         <div id = "canvasContainer">
@@ -122,12 +138,64 @@
                     </article>
                 </section>
             </div>
+            
+            <div class = "about pageContentWrapper" id = "aboutUsContentWrapper">
+                <section class = "main">
+                    <article>
+                        <div class = "content">
+                            <span class = "heading">What is the Euclidean Project?</span>
+                            
+                            <p>
+                                The Euclidean Project is a quick, intuitive, simple, digital geometry constructor that is free and open source. It is available for most desktop and mobile users. The project is subject to many changes in the future as it is very new.  
+                            </p>
+                            
+                            <hr>
+                            <br>
+                            
+                            <span class = "heading">Our Goal</span>
+                            
+                            <p>
+                                The Euclidean Project allows anyone to explore the field of geometry in a hands-on experience with the guiding of innovative software. Users can exercise their creativity and imagination that will only be bounded by the laws of geometry and the code of the software. Let imagination be your guide as you discover geometry!
+                            </p>
+                            
+                            <hr>
+                            <br>
+                            
+                            <span class = "heading">Legal Information</span>
+                            
+                            <p>
+                                While the Euclidean Project is open source, please do not copy anything without giving credit – a nice URL will suffice.
+                            </p>
+                        </div>
+                    </article>
+                </section>
+            </div>
         </div>
         
         <footer>
-                <div class = "content">
-                    <p>The Euclidean Project <br>&copy Litty Ling Inc. | All Righs Reserved</p>
-                </div>
+            <div class = "content">
+                <span class = "heading">The Euclidean Project</span>
+                
+                <span class = "links">
+                    <a class = "icon twitter" href = "https://openclipart.org/image/2400px/svg_to_png/130795/Trollface.png" target = "_blank"><img src = "https://cdn4.iconfinder.com/data/icons/orange-social-icons/128/twitter.png" width = "30px"/></a>
+                    <a class = "icon facebook" href = "https://www.facebook.com/profile.php?id=100010057788677" target = "_blank"><img src = "https://cdn4.iconfinder.com/data/icons/orange-social-icons/128/facebook.png" width = "30px"/></a>
+                    <a class = "icon instagram" href = "https://openclipart.org/image/2400px/svg_to_png/130795/Trollface.png" target = "_blank"><img src = "https://cdn4.iconfinder.com/data/icons/orange-social-icons/128/instagram.png" width = "30px"/></a>
+                    <a class = "icon youtube" href = "https://www.youtube.com/watch?v=2VXacYLcjGA" target = "_blank"><img src = "https://cdn4.iconfinder.com/data/icons/orange-social-icons/128/youtube.png" width = "30px"/></a>
+                    <a class = "icon google" href = "https://www.google.com/search?q=troll+face&tbm=isch&imgil=hMwzLnPlm_pe_M%253A%253BMbF4kenAHRm8-M%253Bhttps%25253A%25252F%25252Fopenclipart.org%25252Fdetail%25252F130795%25252Ftrollface&source=iu&pf=m&fir=hMwzLnPlm_pe_M%253A%252CMbF4kenAHRm8-M%252C_&usg=__ZiUF4NiVDyceuxtztwEfz_9i_20%3D&biw=1292&bih=683&ved=0ahUKEwjaov-_iuDMAhVCRCYKHYy_ASAQyjcINg&ei=e4Q6V5r5B8KImQGM_4aAAg#imgrc=hMwzLnPlm_pe_M%3A"  target = "_blank"><img src = "https://cdn4.iconfinder.com/data/icons/orange-social-icons/128/google_plus.png" width = "30px"/></a>
+                </span>
+                
+                <br>
+                
+                <span class = "links">
+                    <a class = "home" href = "#">HOME</a> |
+                    <a class = "constructor" href = "#">CONSTRUCTOR</a> |
+                    <a class = "about" href = "#">ABOUT</a>
+                </span>
+                
+                <hr>
+                
+                <span>&copy Litty Ling Inc. | All Righs Reserved</span>
+            </div>
         </footer>
     </div>
 </body>

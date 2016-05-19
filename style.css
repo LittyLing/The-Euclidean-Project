@@ -1,3 +1,4 @@
+/* general document */
 * {
  box-sizing: border-box;
 }
@@ -20,6 +21,7 @@ body {
  margin: 0 auto;
 }
 
+/* header and navigation */
 header {
  background-color: #03A9F4;
  color: white;
@@ -129,10 +131,15 @@ header nav:hover #navigationButtons {
  opacity: 1;
 }
 
+/* document content */
 #contentWrapper {
  width: 90%;
  margin: 0 auto;
  text-align: center;
+}
+
+.pageContentWrapper {
+ display: block;    
 }
 
 .button {
@@ -151,6 +158,7 @@ header nav:hover #navigationButtons {
 
 .button:hover, .button.active {
  background-color: #00B0FF;
+ color: white;
 }
 
 .pageContentWrapper {
@@ -160,21 +168,96 @@ header nav:hover #navigationButtons {
 }
 
 .main {
- color: black;
+ color: white;
 }
 
 article {
  text-align: center;
 }
 
-article h1 {
- font-size: 275%;
+article div.content {
+ text-align: left;
+ padding: 20px;
 }
 
-article h2 {
- font-size: 150%;
+article div.content span.heading {
+ display: block;
+ font-size: 30px;
 }
 
+.redirectButton {
+ background-color: #FF9800;
+ color: #E1F5FE;
+ border-radius: 5px;
+ -webkit-transition: background-color 1s, color 1s;
+ -ms-transition: background-color 1s, color 1s;
+ -moz-transition: background-color 1s, color 1s;
+ -o-transition: background-color 1s, color 1s;
+ transition: background-color 1s, color 1s;
+}
+
+.redirectButton:hover {
+ background-color: #FFA726;
+ color: white;
+}
+
+span.title {
+ display: block;
+ font-size: 30px;
+}
+
+span.subheading {
+ display: block;
+ font-size: 25px;
+}
+
+article div.content p {
+ font-size: 20px;    
+}
+
+hr {
+ border-width: 0;
+ width: 100%;
+ height: 2px;
+}
+
+article div.content hr {
+ background-color: #B3E5FC;
+}
+
+span.links {
+ display: inline-block;
+ position: relative;
+ margin: 5px;
+}
+
+span.links a {
+ color: #E1F5FE;
+ -webkit-transition: color 0.5s;
+ -ms-transition: color 0.5s;
+ -moz-transition: color 0.5s;
+ -o-transition: color 0.5s;
+ transition: color 0.5s;
+}
+
+span.links a:hover {
+ color: white;    
+}
+
+span.links a.icon {
+ margin: 5px;
+}
+
+/* home page */
+#homeContentWrapper article {
+ padding: 100px 20px;    
+}
+
+#homeContentWrapper .heading {
+ font-size: 40px;    
+}
+
+/* constructor page */
 #canvasContainer {
  background-color: #4FC3F7;
  color: #E1F5FE;
@@ -284,12 +367,27 @@ article h2 {
  height: 100%;
 }
 
+/* about page */
+
+
+/* footer */
 footer {
  background-color: #00B0FF;
  color: white;
  width: 100%;
  margin-top: 200px;
+ padding: 10px;
  float: left;
  clear: both;
  text-align: center;
+}
+
+footer span.heading {
+ font-size: 25px;
+ display: block;
+ margin-bottom: 5px;
+}
+
+footer hr {
+ background-color: #29B6F6;
 }

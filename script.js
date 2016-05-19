@@ -1,10 +1,54 @@
 // webpage scripts
 // main function
 $(document).ready(function() {
-    // sets header navbar top to header bottom
-    $("#navigationButtons").offset({top: $("header").offset().top + $("header").height() + 20});
-    // sets canvas button container left to canvas container left
-    $("#canvasButtonContainerSide").css("left", $("#canvasContainer").offset().left + 15);
+    // different page display mechanics (only for codecademy)
+    $(".pageContentWrapper").css("display", "none");
+    $(".pageCurrent").css("display", "block");
+    
+    // navigation button click
+    $("#navigationButtons li a").click(function() {
+        if ($(".pageContentWrapper." + $(this).attr("class")).css("display") === "none") {
+            $(".pageContentWrapper").css("display", "none");
+            $(".pageContentWrapper." + $(this).attr("class")).css("display", "block");
+            $("#navigationButtons .active").removeClass("active");
+            $(this).addClass("active");
+            
+            // setting up constructor page (only for codecademy)
+            if ($(this).hasClass("constructor")) {
+                setCanvas();
+                resize();
+            }
+        }
+    });
+    
+    // redirect button click
+    $("#homeContentWrapper .button.redirectButton").click(function() {
+        $(".pageContentWrapper").css("display", "none");
+        $(".pageContentWrapper." + jQuery(this).attr('class').split(' ')[0]).css("display", "block");
+        $("#navigationButtons li a").removeClass("active");
+        $("#navigationButtons li a." + jQuery(this).attr('class').split(' ')[0]).addClass("active");
+    });
+    
+    // footer link click
+    $("footer .links a:not(.icon)").click(function() {
+        $(".pageContentWrapper").css("display", "none");
+        $(".pageContentWrapper." + $(this).attr("class")).css("display", "block");
+        
+        // setting up constructor page (only for codecademy)
+        if ($(this).hasClass("constructor")) {
+            setCanvas();
+            resize();
+        }
+    });
+    
+    function setCanvas() {
+        // sets header navbar top to header bottom
+        $("#navigationButtons").offset({top: $("header").offset().top + $("header").height() + 20});
+        // sets canvas button container left to canvas container left
+        $("#canvasButtonContainerSide").css("left", $("#canvasContainer").offset().left + 15);
+    };
+    
+    setCanvas();
     
     // header navbar animation
     var animating = false;
@@ -129,8 +173,13 @@ var canvasOriginalWidth = canvas.width;
 
 // canvas mode
 var mode = "move";
-
 var construct = "";
+
+// mobile settings
+var mobile = false;
+if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+    mobile = true;
+}
     
 // webpage responsiveness on resize
 function resize() {
@@ -169,22 +218,41 @@ var mouse = {
     pTwoObjectHoverSelect: [],
     // mouse activity
     draw: false,
+    // mobile states
+    touch: false,
     // mouse cursor type
     cursor: "default"
 };
 
-// mouse position function
-function mousePosition(e) {
-    // setting mouse coordinates 
-    mouse.x = e.x - canvas.getBoundingClientRect().left;
-    mouse.y = e.y - canvas.getBoundingClientRect().top;
-    
-    // mouse coordinates updated based on canvas settings
-    mouse.x = parseInt((mouse.x - canvas.width/2)/(canvas.clientWidth/canvas.width));
-    mouse.y = parseInt((-1 * (mouse.y - canvas.height/2))/(canvas.clientHeight/canvas.height));
+// mouse position for desktop function
+function mousePositionDesktop(e) {
+    if (!mobile) {
+        // setting mouse coordinates 
+        mouse.x = e.x - canvas.getBoundingClientRect().left;
+        mouse.y = e.y - canvas.getBoundingClientRect().top;
+        
+        // mouse coordinates updated based on canvas settings
+        mouse.x = (mouse.x - canvas.width/2)/(canvas.clientWidth/canvas.width);
+        mouse.y = (-1 * (mouse.y - canvas.height/2))/(canvas.clientHeight/canvas.height);
+    }
 };
     
-canvas.addEventListener("mousemove", mousePosition);
+canvas.addEventListener("mousemove", mousePositionDesktop);
+
+// mouse position for mobile function
+function mousePositionMobile(e) {
+        // setting mouse coordinates 
+        var x = e.touches[0].clientX - canvas.getBoundingClientRect().left;
+        var y = e.touches[0].clientY - canvas.getBoundingClientRect().top;
+        
+        // mouse coordinates updated based on canvas settings
+        x = (x - canvas.width/2)/(canvas.clientWidth/canvas.width);
+        y = (-1 * (y - canvas.height/2))/(canvas.clientHeight/canvas.height);
+    return {
+        x: x,
+        y: y
+    };
+};
 
 // point objects array
 var points = [];
@@ -756,7 +824,7 @@ function intersectionLines(line1, line2) {
 };
 
 // intersection of circles calculator
-// credit : http://csharphelper.com/blog/2014/09/determine-where-two-circles-intersect-in-c/
+// credit: http://csharphelper.com/blog/2014/09/determine-where-two-circles-intersect-in-c/
 function intersectionCircles(circle1, circle2) {
     // distance between centers of two circles
     var distance = Math.sqrt(Math.pow(circle1.center.x - circle2.center.x, 2) + Math.pow(circle1.center.y - circle2.center.y, 2));
@@ -1595,27 +1663,27 @@ function canvasUserDown() {
     } else if (mode === "findLength" && mouse.objectHover !== null && !mouse.objectHover.hidden) {
         // measuring length
         if (mouse.objectHover.class !== "label") {
-            mouse.select.push(mouse.colliding);
+            mouse.select.push(mouse.objectHover);
             $("#canvasInterface span").html(mouse.select.length + " points selected!");
-            if (mouse.select.length >= 1 && mouse.objectHover.class === "lineSegment" && !mouse.objectHover.hidden) {
+            if (mouse.select.length >= 1 && mouse.objectHover.class === "lineSegment") {
                 // creates new label with length of selected line segment
                 labels.push(new Label((mouse.objectHover.point1.x + mouse.objectHover.point2.x)/2, -(mouse.objectHover.point1.y + mouse.objectHover.point2.y)/2, findLengthLineSegment(mouse.objectHover) + " u", "lengthLineSegment", [mouse.objectHover])); 
                 
                 $("#canvasInterface span").html("Length found!");
-            } else if (mouse.select.length >= 2 && mouse.select[0].class === "point" && mouse.select[1].class === "point" && !mouse.select[0].hidden && !mouse.select[1].hidden) {
+                mouse.select = [];
+            } else if (mouse.select.length >= 2 && mouse.select[0].class === "point" && mouse.select[1].class === "point") {
                 // creates new line segments between selected points
                 lineSegments.push(new LineSegment(mouse.select[0].x, mouse.select[0].y, mouse.select[1].x, mouse.select[1].y, "select", [mouse.select[0], mouse.select[1]]));
                 // creates new label with length between selected points
                 labels.push(new Label((mouse.select[0].x + mouse.select[1].x)/2, -(mouse.select[0].y + mouse.select[1].y)/2, findLengthPoints(mouse.select[0], mouse.select[1]) + " u", "lengthPoints", [mouse.select[0], mouse.select[1]]));
                 
                 $("#canvasInterface span").html("Length found!");
+                mouse.select = [];
             } else if (mouse.select.length >= 2) {
                 // selected objects cannot be used
                 $("#canvasInterface span").html("Selected objects do not meet parameters!");
                 mouse.select = [];
             }
-            
-            mouse.select = [];
         } else {
             // selected objects cannot be used
             $("#canvasInterface span").html("Selected objects do not meet parameters!");
@@ -2014,11 +2082,178 @@ canvas.addEventListener("mousemove", canvasUserMove);
 canvas.addEventListener("mouseup", canvasUserUp);
 
 // mobile controls
-canvas.addEventListener("touchstart", canvasUserDown);
+// credit: http://bencentra.com/code/2014/12/05/html5-canvas-touch-events.html
+canvas.addEventListener("touchstart", function(e) {
+    if (mobile) {
+        mouse.x = mousePositionMobile(e).x;
+        mouse.y = mousePositionMobile(e).y;
+        
+        // mouse colliding
+        // line segments
+        for (var i = 0; i < lineSegments.length; i++) {
+            var lineSegment = lineSegments[i];
+            
+            if (lineSegment.mouseOver(mouse.x, mouse.y) && !lineSegment.hidden) {
+                // adds line segment to mouse properties
+                lineSegment.color = "#03A9F4";
+                
+                // mouse properties set to line segment
+                if (Math.abs(lineSegment.slope) > 1) {
+                    // mouse colliding when the absolute value of line segment slope is greater than 1
+                    mouse.colliding = {
+                        x: (mouse.y - lineSegment.point1.y)/lineSegment.slope + lineSegment.point1.x,
+                        y: mouse.y,
+                    };
+                } else {
+                    // mouse colliding when the absolute value of line segment slope is less than 1
+                    mouse.colliding = {
+                        x: mouse.x,
+                        y: lineSegment.slope * (mouse.x - lineSegment.point1.x) + lineSegment.point1.y,
+                    };
+                }    
+                
+                mouse.objectHover = lineSegment;
+            }
+        }
+        
+        // lines
+        for (var i = 0; i < lines.length; i++) {
+            var line = lines[i];
+            
+            if (line.mouseOver(mouse.x, mouse.y) && !line.hidden) {
+                // adds line to mouse properties
+                line.color = "#03A9F4";
+                
+                // mouse properties set to line
+                if (Math.abs(line.slope) > 1) {
+                    // mouse colliding when the absolute value of line slope is greater than 1
+                    mouse.colliding = {
+                        x: (mouse.y - line.point1.y)/line.slope + line.point1.x,
+                        y: mouse.y,
+                    };
+                } else {
+                    mouse.colliding = {
+                        // mouse colliding when the absolute value of line slope is less than 1
+                        x: mouse.x,
+                        y: line.slope * (mouse.x - line.point1.x) + line.point1.y,
+                    };
+                }
+                
+                mouse.objectHover = line;
+            }
+        }
+        
+        // circles
+        for (var i = 0; i < circles.length; i++) {
+            var circle = circles[i];
+            
+            if (circle.mouseOver(mouse.x, mouse.y) && !circle.hidden) {
+                // adds circle segment to mouse properties
+                circle.color = "#03A9F4";
+            
+                // mouse properties set to circle
+                // establishes whether the mouse is above or below circle center (important for mouse colliding)
+                var yFactor = 1;
+                if (mouse.y < circle.center.y) {
+                    yFactor = -1;
+                }
+                
+                // establishes whether the mouse is left or right of the circle center (important for mouse colliding)
+                var xFactor = 1;
+                if (mouse.x < circle.center.x) {
+                    xFactor = -1;    
+                }
+                
+                if (!circle.hidden && mouse.clickSelect !== circle) {
+                    // mouse properties set to circle
+                    if (mouse.y > circle.center.y - 20 && mouse.y < circle.center.y + 20) {
+                        // mouse colliding when mouse y is close to circle center y
+                        mouse.colliding = {
+                            // x equation derived from equation of circle
+                            x: xFactor * Math.sqrt(Math.abs(Math.pow(circle.radius, 2) - Math.pow(mouse.y - circle.center.y, 2))) + circle.center.x,
+                            y: mouse.y,    
+                        };
+                    } else {
+                        // mouse colliding when mouse y is not close to circle center y
+                        mouse.colliding = {
+                            x: mouse.x,
+                            // y equation derived from equation of circle
+                            y: yFactor * Math.sqrt(Math.abs(Math.pow(circle.radius, 2) - Math.pow(mouse.x - circle.center.x, 2))) + circle.center.y,
+                        };
+                    }
+                    
+                    mouse.objectHover = circle;
+                }
+            }
+        }
+        
+        // points
+        for (var i = 0; i < points.length; i++) {
+            var point = points[i];
+            
+            if (point.mouseOver(mouse.x, mouse.y) && !point.hidden) {
+                
+                // adds point to mouse properties
+                point.color = "#03A9F4";
+                
+                // mouse properties set to point
+                mouse.colliding = point;
+                mouse.objectHover = point;
+            }
+        }
+        
+        var touch = e.touches[0];
+        var mouseEvent = new MouseEvent("mousedown", {
+            clientX: touch.clientX,
+            clientY: touch.clientY
+        });
+        canvas.dispatchEvent(mouseEvent);
+        canvasUserDown();
+    }    
+}, false);
 
-canvas.addEventListener("touchmove", canvasUserMove);
+canvas.addEventListener("touchmove", function(e) {
+    if (mobile) {
+        mouse.x = mousePositionMobile(e).x;
+        mouse.y = mousePositionMobile(e).y;
+		var touch = e.touches[0];
+		var mouseEvent = new MouseEvent("mousemove", {
+			clientX: touch.clientX,
+			clientY: touch.clientY
+		});
+		canvas.dispatchEvent(mouseEvent);
+        canvasUserMove();
+    }        
+});
 
-canvas.addEventListener("touchend", canvasUserUp);
+canvas.addEventListener("touchend", function(e) {
+    if (mobile) {
+        var mouseEvent = new MouseEvent("mouseup", {});
+		canvas.dispatchEvent(mouseEvent);
+        canvasUserUp();
+        mouse.x = Math.pow(canvas.width, 3);
+        mouse.y = Math.pow(canvas.height, 3);
+    }        
+});
+
+// mobile scrolling prevention
+document.body.addEventListener("touchstart", function (e) {
+    if (e.target == canvas) {
+    e.preventDefault();
+    }
+}, false);
+
+document.body.addEventListener("touchend", function (e) {
+    if (e.target == canvas) {
+    e.preventDefault();
+    }
+}, false);
+
+document.body.addEventListener("touchmove", function (e) {
+    if (e.target == canvas) {
+    e.preventDefault();
+    }
+}, false);
 
 // main logic and rendering function
 function update() {
