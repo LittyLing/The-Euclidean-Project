@@ -1310,11 +1310,12 @@ function canvasUserDown() {
                 mouse.clickSelect.specialClass = null;
             }
             
-            if ( mouse.clickSelect.class !== "label") {
+            if (mouse.clickSelect.class !== "label") {
                 mouse.pX.push(mouse.colliding.x);
                 mouse.pY.push(mouse.colliding.y);
             }
         }
+        
         $("#canvasInterface span").html("Object selected");
     } else if (mode === "label" && mouse.objectHover !== null && !mouse.objectHover.hidden && mouse.objectHover.class !== "label") {
         // labelling objects
@@ -1978,16 +1979,22 @@ function canvasUserUp() {
                 // sets circle radius to the distance between the circle center and mouse coordinates
                 circle.radius = Math.sqrt(Math.pow(mouse.pX[mouse.pX.length - 1] - center.x, 2) + Math.pow(mouse.pY[mouse.pY.length - 1] - center.y, 2));
             }
+            
+            $("#canvasInterface span").html("Object placed");
         } else if (object.class === "label") {
             // places label
             // sets label centered x and y to mouse x and y
             object.x = mouse.pX[mouse.pX.length - 1] - object.width/2;
             object.y = -mouse.pY[mouse.pY.length - 1] + object.height/4;
+            
+            $("#canvasInterface span").html("Object placed");
         } else if (object.class === "stroke") {
             // places stroke
             // sets first ink of stroke x and y to mouse x and y
             object.inks[0].x = mouse.x;
             object.inks[0].y = mouse.y;
+            
+            $("#canvasInterface span").html("Object placed");
         }
         
         mouse.clickSelect = null;
@@ -2202,12 +2209,33 @@ canvas.addEventListener("touchstart", function(e) {
             }
         }
         
-        var touch = e.touches[0];
-        var mouseEvent = new MouseEvent("mousedown", {
-            clientX: touch.clientX,
-            clientY: touch.clientY
-        });
-        canvas.dispatchEvent(mouseEvent);
+        // labels
+        for (var i = 0; i < labels.length; i++) {
+            var label = labels[i];
+            
+            if (label.mouseOver(mouse.x, mouse.y) && !label.hidden) {
+            // adds label to mouse properties
+            label.color = "#03A9F4";
+            
+            // mouse properties set to label
+            mouse.objectHover = label;
+                
+            }
+        }
+        
+        // strokes
+        for (var i = 0; i < strokes.length; i++) {
+            var stroke = strokes[i];
+            
+            if (stroke.mouseOver(mouse.x, mouse.y) && !stroke.hidden) {
+                // adds stroke to mouse properties
+                stroke.color = "#03A9F4";
+                
+                // mouse properties set to stroke
+                mouse.objectHover = stroke;
+            }
+        }
+        
         canvasUserDown();
     }    
 }, false);
@@ -2216,20 +2244,13 @@ canvas.addEventListener("touchmove", function(e) {
     if (mobile) {
         mouse.x = mousePositionMobile(e).x;
         mouse.y = mousePositionMobile(e).y;
-		var touch = e.touches[0];
-		var mouseEvent = new MouseEvent("mousemove", {
-			clientX: touch.clientX,
-			clientY: touch.clientY
-		});
-		canvas.dispatchEvent(mouseEvent);
+        
         canvasUserMove();
     }        
 });
 
 canvas.addEventListener("touchend", function(e) {
     if (mobile) {
-        var mouseEvent = new MouseEvent("mouseup", {});
-		canvas.dispatchEvent(mouseEvent);
         canvasUserUp();
         mouse.x = Math.pow(canvas.width, 3);
         mouse.y = Math.pow(canvas.height, 3);
@@ -2270,7 +2291,7 @@ function update() {
     // mouse
     $("#canvas").css("cursor", mouse.cursor);
         
-    //line segments
+    // line segments
     for (var i = 0; i < lineSegments.length; i++) {
         var lineSegment = lineSegments[i];
         
@@ -2356,7 +2377,7 @@ function update() {
         }
     }
     
-    //lines
+    // lines
     for (var i = 0; i < lines.length; i++) {
         var line = lines[i];
         
@@ -2546,7 +2567,7 @@ function update() {
         } 
     }
     
-    //circles
+    // circles
     for (var i = 0; i < circles.length; i++) {
         var circle = circles[i];
         
@@ -2672,7 +2693,7 @@ function update() {
         }
     }
     
-    //points
+    // points
     for (var i = 0; i < points.length; i++) {
         var point = points[i];
         
@@ -2843,7 +2864,7 @@ function update() {
         }
     }
     
-    //labels
+    // labels
     for (var i = 0; i < labels.length; i++) {
         var label = labels[i];
         
@@ -2941,7 +2962,7 @@ function update() {
         }
     }
     
-    //strokes
+    // strokes
     for (var i = 0; i < strokes.length; i++) {
         var stroke = strokes[i];
         
