@@ -21,6 +21,14 @@ $(document).ready(function() {
         }
     });
     
+    // redirect button click
+    $("#homeContentWrapper .button.redirectButton").click(function() {
+        $(".pageContentWrapper").css("display", "none");
+        $(".pageContentWrapper." + jQuery(this).attr('class').split(' ')[0]).css("display", "block");
+        $("#navigationButtons li a").removeClass("active");
+        $("#navigationButtons li a." + jQuery(this).attr('class').split(' ')[0]).addClass("active");
+    });
+    
     // footer link click
     $("footer .links a:not(.icon)").click(function() {
         $(".pageContentWrapper").css("display", "none");
@@ -1302,11 +1310,12 @@ function canvasUserDown() {
                 mouse.clickSelect.specialClass = null;
             }
             
-            if ( mouse.clickSelect.class !== "label") {
+            if (mouse.clickSelect.class !== "label") {
                 mouse.pX.push(mouse.colliding.x);
                 mouse.pY.push(mouse.colliding.y);
             }
         }
+        
         $("#canvasInterface span").html("Object selected");
     } else if (mode === "label" && mouse.objectHover !== null && !mouse.objectHover.hidden && mouse.objectHover.class !== "label") {
         // labelling objects
@@ -1970,16 +1979,22 @@ function canvasUserUp() {
                 // sets circle radius to the distance between the circle center and mouse coordinates
                 circle.radius = Math.sqrt(Math.pow(mouse.pX[mouse.pX.length - 1] - center.x, 2) + Math.pow(mouse.pY[mouse.pY.length - 1] - center.y, 2));
             }
+            
+            $("#canvasInterface span").html("Object placed");
         } else if (object.class === "label") {
             // places label
             // sets label centered x and y to mouse x and y
             object.x = mouse.pX[mouse.pX.length - 1] - object.width/2;
             object.y = -mouse.pY[mouse.pY.length - 1] + object.height/4;
+            
+            $("#canvasInterface span").html("Object placed");
         } else if (object.class === "stroke") {
             // places stroke
             // sets first ink of stroke x and y to mouse x and y
             object.inks[0].x = mouse.x;
             object.inks[0].y = mouse.y;
+            
+            $("#canvasInterface span").html("Object placed");
         }
         
         mouse.clickSelect = null;
@@ -2077,15 +2092,150 @@ canvas.addEventListener("mouseup", canvasUserUp);
 // credit: http://bencentra.com/code/2014/12/05/html5-canvas-touch-events.html
 canvas.addEventListener("touchstart", function(e) {
     if (mobile) {
-        mouse.touch = true;
         mouse.x = mousePositionMobile(e).x;
         mouse.y = mousePositionMobile(e).y;
-        var touch = e.touches[0];
-        var mouseEvent = new MouseEvent("mousedown", {
-            clientX: touch.clientX,
-            clientY: touch.clientY
-        });
-        canvas.dispatchEvent(mouseEvent);
+        
+        // mouse colliding
+        // line segments
+        for (var i = 0; i < lineSegments.length; i++) {
+            var lineSegment = lineSegments[i];
+            
+            if (lineSegment.mouseOver(mouse.x, mouse.y) && !lineSegment.hidden) {
+                // adds line segment to mouse properties
+                lineSegment.color = "#03A9F4";
+                
+                // mouse properties set to line segment
+                if (Math.abs(lineSegment.slope) > 1) {
+                    // mouse colliding when the absolute value of line segment slope is greater than 1
+                    mouse.colliding = {
+                        x: (mouse.y - lineSegment.point1.y)/lineSegment.slope + lineSegment.point1.x,
+                        y: mouse.y,
+                    };
+                } else {
+                    // mouse colliding when the absolute value of line segment slope is less than 1
+                    mouse.colliding = {
+                        x: mouse.x,
+                        y: lineSegment.slope * (mouse.x - lineSegment.point1.x) + lineSegment.point1.y,
+                    };
+                }    
+                
+                mouse.objectHover = lineSegment;
+            }
+        }
+        
+        // lines
+        for (var i = 0; i < lines.length; i++) {
+            var line = lines[i];
+            
+            if (line.mouseOver(mouse.x, mouse.y) && !line.hidden) {
+                // adds line to mouse properties
+                line.color = "#03A9F4";
+                
+                // mouse properties set to line
+                if (Math.abs(line.slope) > 1) {
+                    // mouse colliding when the absolute value of line slope is greater than 1
+                    mouse.colliding = {
+                        x: (mouse.y - line.point1.y)/line.slope + line.point1.x,
+                        y: mouse.y,
+                    };
+                } else {
+                    mouse.colliding = {
+                        // mouse colliding when the absolute value of line slope is less than 1
+                        x: mouse.x,
+                        y: line.slope * (mouse.x - line.point1.x) + line.point1.y,
+                    };
+                }
+                
+                mouse.objectHover = line;
+            }
+        }
+        
+        // circles
+        for (var i = 0; i < circles.length; i++) {
+            var circle = circles[i];
+            
+            if (circle.mouseOver(mouse.x, mouse.y) && !circle.hidden) {
+                // adds circle segment to mouse properties
+                circle.color = "#03A9F4";
+            
+                // mouse properties set to circle
+                // establishes whether the mouse is above or below circle center (important for mouse colliding)
+                var yFactor = 1;
+                if (mouse.y < circle.center.y) {
+                    yFactor = -1;
+                }
+                
+                // establishes whether the mouse is left or right of the circle center (important for mouse colliding)
+                var xFactor = 1;
+                if (mouse.x < circle.center.x) {
+                    xFactor = -1;    
+                }
+                
+                if (!circle.hidden && mouse.clickSelect !== circle) {
+                    // mouse properties set to circle
+                    if (mouse.y > circle.center.y - 20 && mouse.y < circle.center.y + 20) {
+                        // mouse colliding when mouse y is close to circle center y
+                        mouse.colliding = {
+                            // x equation derived from equation of circle
+                            x: xFactor * Math.sqrt(Math.abs(Math.pow(circle.radius, 2) - Math.pow(mouse.y - circle.center.y, 2))) + circle.center.x,
+                            y: mouse.y,    
+                        };
+                    } else {
+                        // mouse colliding when mouse y is not close to circle center y
+                        mouse.colliding = {
+                            x: mouse.x,
+                            // y equation derived from equation of circle
+                            y: yFactor * Math.sqrt(Math.abs(Math.pow(circle.radius, 2) - Math.pow(mouse.x - circle.center.x, 2))) + circle.center.y,
+                        };
+                    }
+                    
+                    mouse.objectHover = circle;
+                }
+            }
+        }
+        
+        // points
+        for (var i = 0; i < points.length; i++) {
+            var point = points[i];
+            
+            if (point.mouseOver(mouse.x, mouse.y) && !point.hidden) {
+                
+                // adds point to mouse properties
+                point.color = "#03A9F4";
+                
+                // mouse properties set to point
+                mouse.colliding = point;
+                mouse.objectHover = point;
+            }
+        }
+        
+        // labels
+        for (var i = 0; i < labels.length; i++) {
+            var label = labels[i];
+            
+            if (label.mouseOver(mouse.x, mouse.y) && !label.hidden) {
+            // adds label to mouse properties
+            label.color = "#03A9F4";
+            
+            // mouse properties set to label
+            mouse.objectHover = label;
+                
+            }
+        }
+        
+        // strokes
+        for (var i = 0; i < strokes.length; i++) {
+            var stroke = strokes[i];
+            
+            if (stroke.mouseOver(mouse.x, mouse.y) && !stroke.hidden) {
+                // adds stroke to mouse properties
+                stroke.color = "#03A9F4";
+                
+                // mouse properties set to stroke
+                mouse.objectHover = stroke;
+            }
+        }
+        
         canvasUserDown();
     }    
 }, false);
@@ -2094,25 +2244,16 @@ canvas.addEventListener("touchmove", function(e) {
     if (mobile) {
         mouse.x = mousePositionMobile(e).x;
         mouse.y = mousePositionMobile(e).y;
-		var touch = e.touches[0];
-		var mouseEvent = new MouseEvent("mousemove", {
-			clientX: touch.clientX,
-			clientY: touch.clientY
-		});
-		canvas.dispatchEvent(mouseEvent);
+        
         canvasUserMove();
     }        
 });
 
 canvas.addEventListener("touchend", function(e) {
     if (mobile) {
-        mouse.touch = false;
-        var mouseEvent = new MouseEvent("mouseup", {});
-		canvas.dispatchEvent(mouseEvent);
         canvasUserUp();
-        mouse.colliding = null;
-        mouse.objectHover = null;
-        mouse.twoObjectHover = [];
+        mouse.x = Math.pow(canvas.width, 3);
+        mouse.y = Math.pow(canvas.height, 3);
     }        
 });
 
@@ -2122,11 +2263,13 @@ document.body.addEventListener("touchstart", function (e) {
     e.preventDefault();
     }
 }, false);
+
 document.body.addEventListener("touchend", function (e) {
     if (e.target == canvas) {
     e.preventDefault();
     }
 }, false);
+
 document.body.addEventListener("touchmove", function (e) {
     if (e.target == canvas) {
     e.preventDefault();
@@ -2148,7 +2291,7 @@ function update() {
     // mouse
     $("#canvas").css("cursor", mouse.cursor);
         
-    //line segments
+    // line segments
     for (var i = 0; i < lineSegments.length; i++) {
         var lineSegment = lineSegments[i];
         
@@ -2234,7 +2377,7 @@ function update() {
         }
     }
     
-    //lines
+    // lines
     for (var i = 0; i < lines.length; i++) {
         var line = lines[i];
         
@@ -2424,7 +2567,7 @@ function update() {
         } 
     }
     
-    //circles
+    // circles
     for (var i = 0; i < circles.length; i++) {
         var circle = circles[i];
         
@@ -2550,7 +2693,7 @@ function update() {
         }
     }
     
-    //points
+    // points
     for (var i = 0; i < points.length; i++) {
         var point = points[i];
         
@@ -2721,7 +2864,7 @@ function update() {
         }
     }
     
-    //labels
+    // labels
     for (var i = 0; i < labels.length; i++) {
         var label = labels[i];
         
@@ -2819,7 +2962,7 @@ function update() {
         }
     }
     
-    //strokes
+    // strokes
     for (var i = 0; i < strokes.length; i++) {
         var stroke = strokes[i];
         
