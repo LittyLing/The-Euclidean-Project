@@ -158,6 +158,7 @@ header nav:hover #navigationButtons {
 
 .button:hover, .button.active {
  background-color: #00B0FF;
+ color: white;
 }
 
 .pageContentWrapper {
@@ -184,6 +185,22 @@ article div.content span.heading {
  font-size: 30px;
 }
 
+.redirectButton {
+ background-color: #FF9800;
+ color: #E1F5FE;
+ border-radius: 5px;
+ -webkit-transition: background-color 1s, color 1s;
+ -ms-transition: background-color 1s, color 1s;
+ -moz-transition: background-color 1s, color 1s;
+ -o-transition: background-color 1s, color 1s;
+ transition: background-color 1s, color 1s;
+}
+
+.redirectButton:hover {
+ background-color: #FFA726;
+ color: white;
+}
+
 span.title {
  display: block;
  font-size: 30px;
@@ -208,6 +225,12 @@ article div.content hr {
  background-color: #B3E5FC;
 }
 
+span.links {
+ display: inline-block;
+ position: relative;
+ margin: 5px;
+}
+
 span.links a {
  color: #E1F5FE;
  -webkit-transition: color 0.5s;
@@ -221,7 +244,18 @@ span.links a:hover {
  color: white;    
 }
 
+span.links a.icon {
+ margin: 5px;
+}
+
 /* home page */
+#homeContentWrapper article {
+ padding: 100px 20px;    
+}
+
+#homeContentWrapper .heading {
+ font-size: 40px;    
+}
 
 /* constructor page */
 #canvasContainer {
@@ -351,7 +385,7 @@ footer {
 footer span.heading {
  font-size: 25px;
  display: block;
- margin-bottom: 10px;
+ margin-bottom: 5px;
 }
 
 footer hr {
