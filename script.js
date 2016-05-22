@@ -2198,7 +2198,7 @@ canvas.addEventListener("touchstart", function(e) {
         for (var i = 0; i < points.length; i++) {
             var point = points[i];
             
-            if (point.mouseOver(mouse.x, mouse.y) && !point.hidden) {
+            if (point.mouseOver(mouse.x, mouse.y) && !point.hidden && mouse.clickSelect !== point && point.specialClass !== "select" && point.specialClass !== "construct") {
                 
                 // adds point to mouse properties
                 point.color = "#03A9F4";
@@ -2684,6 +2684,10 @@ function update() {
         }
         
         // rendering
+        if (mode === "hideShow" && circle.hidden) {
+            circle.color = "gray";
+        }
+        
         if (circle.show) {
             ctx.strokeStyle = circle.color;
             ctx.lineWidth = 5;
