@@ -2367,6 +2367,10 @@ function update() {
         }
         
         // rendering
+        if (mode === "hideShow" && lineSegment.hidden) {
+            lineSegment.color = "gray";
+        }
+        
         if (lineSegment.show) {
             ctx.strokeStyle = lineSegment.color;
             ctx.lineWidth = 5;
@@ -2557,6 +2561,10 @@ function update() {
         }
         
         // rendering
+        if (mode === "hideShow" && line.hidden) {
+            line.color = "gray";
+        }
+        
         if (line.show) {
             ctx.strokeStyle = line.color;
             ctx.lineWidth = 5;
@@ -2860,6 +2868,10 @@ function update() {
         }
         
         // rendering
+        if (mode === "hideShow" && point.hidden) {
+            point.color = "gray";
+        }
+        
         if (point.show && point.specialClass !== "select") {
             ctx.fillStyle = point.color;
             ctx.beginPath();
@@ -2952,6 +2964,10 @@ function update() {
         label.width = label.text.toString().length * 10;
         
         // rendering
+        if (mode === "hideShow" && label.hidden) {
+            label.color = "gray";
+        }
+        
         if (label.show) {
             ctx.save();
             ctx.scale(1, -1);
@@ -3011,6 +3027,10 @@ function update() {
         }
         
         // ink rendering
+        if (mode === "hideShow" && stroke.hidden) {
+            stroke.color = "gray";
+        }
+        
         for (var j = 0; j < stroke.inks.length; j++) {
             if (stroke.show) {
                 var ink2 = stroke.inks[j];
