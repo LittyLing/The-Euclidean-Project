@@ -2120,6 +2120,10 @@ canvas.addEventListener("touchstart", function(e) {
                 }    
                 
                 mouse.objectHover = lineSegment;
+                
+                if (mouse.twoObjectHover.length < 3 && mouse.twoObjectHover.indexOf(lineSegment) < 0) {
+                    mouse.twoObjectHover.push(lineSegment);
+                }
             }
         }
         
@@ -2147,6 +2151,10 @@ canvas.addEventListener("touchstart", function(e) {
                 }
                 
                 mouse.objectHover = line;
+                
+                if (mouse.twoObjectHover.length < 3 && mouse.twoObjectHover.indexOf(line) < 0) {
+                    mouse.twoObjectHover.push(line);
+                }
             }
         }
         
@@ -2190,6 +2198,10 @@ canvas.addEventListener("touchstart", function(e) {
                     }
                     
                     mouse.objectHover = circle;
+                
+                if (mouse.twoObjectHover.length < 3 && mouse.twoObjectHover.indexOf(circle) < 0) {
+                    mouse.twoObjectHover.push(circle);
+                }
                 }
             }
         }
