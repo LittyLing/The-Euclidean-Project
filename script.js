@@ -5,6 +5,16 @@ $(document).ready(function() {
     $(".pageContentWrapper").css("display", "none");
     $(".pageCurrent").css("display", "block");
     
+    // change settings at home page
+    function homePageSettings() {
+        $("footer").css("margin-top", "0px");
+    };
+    
+    // revert settings at non home page
+    function nonHomePageSettings() {
+        $("footer").css("margin-top", "200px");
+    };
+    
     // navigation button click
     $("#navigationButtons li a").click(function() {
         if ($(".pageContentWrapper." + $(this).attr("class")).css("display") === "none") {
@@ -18,6 +28,12 @@ $(document).ready(function() {
                 setCanvas();
                 resize();
             }
+    
+            if ($(this).hasClass("home")) {
+                homePageSettings();
+            } else if (!$(this).hasClass("home")) {
+                nonHomePageSettings();    
+            }
         }
     });
     
@@ -27,6 +43,18 @@ $(document).ready(function() {
         $(".pageContentWrapper." + jQuery(this).attr('class').split(' ')[0]).css("display", "block");
         $("#navigationButtons li a").removeClass("active");
         $("#navigationButtons li a." + jQuery(this).attr('class').split(' ')[0]).addClass("active");
+            
+        // setting up constructor page (only for codecademy)
+        if ($(this).hasClass("constructor")) {
+            setCanvas();
+            resize();
+        }
+    
+        if ($(this).hasClass("home")) {
+            homePageSettings();
+        } else if (!$(this).hasClass("home")) {
+            nonHomePageSettings();    
+        }
     });
     
     // footer link click
@@ -39,6 +67,12 @@ $(document).ready(function() {
             setCanvas();
             resize();
         }
+    
+        if ($(this).hasClass("home")) {
+            homePageSettings();
+        } else if (!$(this).hasClass("home")) {
+            nonHomePageSettings();    
+        }
     });
     
     function setCanvas() {
@@ -46,6 +80,12 @@ $(document).ready(function() {
         $("#navigationButtons").offset({top: $("header").offset().top + $("header").height() + 20});
         // sets canvas button container left to canvas container left
         $("#canvasButtonContainerSide").css("left", $("#canvasContainer").offset().left + 15);
+    
+        if ($("#homeContentWrapper").hasClass("pageCurrent")) {
+            homePageSettings();
+        } else if (!$("#homeContentWrapper").hasClass("pageCurrent")) {
+            nonHomePageSettings();    
+        }
     };
     
     setCanvas();
@@ -156,7 +196,7 @@ $(document).ready(function() {
 (function() {
     var requestAnimationFrame = window.requestAnimationFrame || 
     window.mozRequestAnimationFrame || 
-    window.msRequestAnimatinFrame || 
+    window.msRequestAnimationFrame || 
     window.webkitRequestAnimationFrame;
     window.requestAnimationFrame = requestAnimationFrame;
 })();
