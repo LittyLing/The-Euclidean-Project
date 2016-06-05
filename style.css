@@ -185,7 +185,7 @@ article div.content span.heading {
 }
 
 .redirectButton {
- background-color: #FF9800;
+ background-color: #FB8C00;
  color: #E1F5FE;
  border-radius: 5px;
  padding: 10px 20px;
@@ -250,8 +250,10 @@ span.links a.icon {
 
 /* home page */
 #homeContentWrapper {
- background: url("http://s33.postimg.org/ic0elbyzz/Full_Size_Render.jpg") center 50px no-repeat;
+ background-color: rgba(0, 0, 0, 0.5);
+ background: url("http://s33.postimg.org/vj9gl7x6n/The_Euclidean_Project_Picture.png") center 50px no-repeat;
  background-size: cover;
+ background-filter: brightness(50%);
  height: 1000px;
 }
 
@@ -260,7 +262,7 @@ span.links a.icon {
 }
 
 #homeContentWrapper .heading {
- font-size: 60px;    
+ font-size: 60px;
 }
 
 #homeContentWrapper .subheading {
