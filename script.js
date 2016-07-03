@@ -22,6 +22,7 @@ $(document).ready(function() {
             $(".pageContentWrapper." + $(this).attr("class")).css("display", "block");
             $("#navigationButtons .active").removeClass("active");
             $(this).addClass("active");
+            $(document).scrollTop(0);
             
             // setting up constructor page (only for codecademy)
             if ($(this).hasClass("constructor")) {
@@ -43,6 +44,7 @@ $(document).ready(function() {
         $(".pageContentWrapper." + jQuery(this).attr('class').split(' ')[0]).css("display", "block");
         $("#navigationButtons li a").removeClass("active");
         $("#navigationButtons li a." + jQuery(this).attr('class').split(' ')[0]).addClass("active");
+        $(document).scrollTop(0);
             
         // setting up constructor page (only for codecademy)
         if ($(this).hasClass("constructor")) {
@@ -59,19 +61,24 @@ $(document).ready(function() {
     
     // footer link click
     $("footer .links a:not(.icon)").click(function() {
-        $(".pageContentWrapper").css("display", "none");
-        $(".pageContentWrapper." + $(this).attr("class")).css("display", "block");
+        if ($(".pageContentWrapper." + $(this).attr("class")).css("display") === "none") {
+            $(".pageContentWrapper").css("display", "none");
+            $(".pageContentWrapper." + $(this).attr("class")).css("display", "block");
+            $("#navigationButtons .active").removeClass("active");
+            $("#navigationButtons li a."  + $(this).attr("class")).addClass("active");
+            $(document).scrollTop(0);
         
-        // setting up constructor page (only for codecademy)
-        if ($(this).hasClass("constructor")) {
-            setCanvas();
-            resize();
-        }
-    
-        if ($(this).hasClass("home")) {
-            homePageSettings();
-        } else if (!$(this).hasClass("home")) {
-            nonHomePageSettings();    
+            // setting up constructor page (only for codecademy)
+            if ($(this).hasClass("constructor")) {
+                setCanvas();
+                resize();
+            }
+        
+            if ($(this).hasClass("home")) {
+                homePageSettings();
+            } else if (!$(this).hasClass("home")) {
+                nonHomePageSettings();    
+            }
         }
     });
     
@@ -281,13 +288,13 @@ canvas.addEventListener("mousemove", mousePositionDesktop);
 
 // mouse position for mobile function
 function mousePositionMobile(e) {
-        // setting mouse coordinates 
-        var x = e.touches[0].clientX - canvas.getBoundingClientRect().left;
-        var y = e.touches[0].clientY - canvas.getBoundingClientRect().top;
-        
-        // mouse coordinates updated based on canvas settings
-        x = (x - canvas.width/2)/(canvas.clientWidth/canvas.width);
-        y = (-1 * (y - canvas.height/2))/(canvas.clientHeight/canvas.height);
+    // setting mouse coordinates 
+    var x = e.touches[0].clientX - canvas.getBoundingClientRect().left;
+    var y = e.touches[0].clientY - canvas.getBoundingClientRect().top;
+    
+    // mouse coordinates updated based on canvas settings
+    x = (x - canvas.width/2)/(canvas.clientWidth/canvas.width);
+    y = (-1 * (y - canvas.height/2))/(canvas.clientHeight/canvas.height);
     return {
         x: x,
         y: y
